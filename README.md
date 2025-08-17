@@ -44,3 +44,34 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# if you know — админка бара
+
+## Быстрый старт
+
+1. Установите зависимости:
+   ```bash
+   npm install
+   ```
+2. Создайте файл `.env` со следующими переменными:
+   ```env
+   REACT_APP_SUPABASE_URL=https://fbcwxlxdqgdutqpdqvae.supabase.co
+   REACT_APP_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiY3d4bHhkcWdkdXRxcGRxdmFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkzMzI3MjQsImV4cCI6MjA2NDkwODcyNH0.jdK9S6NKE4pxk0CI1oG7aaKHWDW5GH9gPxVH5Aj4r-g
+   REACT_APP_SUPABASE_POSTGRES_PASSWORD=Rocklee4ever
+   ```
+3. Запустите проект:
+   ```bash
+   npm start
+   ```
+
+## Используемые технологии
+
+- React + TypeScript
+- Material UI
+- Supabase
+- ESLint + Prettier
+
+## Форматирование кода
+
+- Запустить форматирование: `npx prettier --write .`
+- Проверить линтинг: `npx eslint . --ext .ts,.tsx`
