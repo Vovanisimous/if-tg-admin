@@ -48,7 +48,14 @@ const VisitorsPage: React.FC = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90, filterable: true },
     { field: 'username', headerName: 'Username', width: 160, filterable: true },
-    { field: 'name', headerName: 'Имя', width: 160, filterable: true },
+    { field: 'name', headerName: 'Имя в телеграме', width: 160, filterable: true },
+    {
+      field: 'real_name',
+      headerName: 'Имя',
+      width: 160,
+      filterable: true,
+      valueFormatter: (value: string) => (value ? value : '-'),
+    },
     {
       field: 'creation_date',
       headerName: 'Дата создания',
@@ -63,6 +70,7 @@ const VisitorsPage: React.FC = () => {
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
+          timeZone: 'UTC',
         });
       },
     },
@@ -80,6 +88,7 @@ const VisitorsPage: React.FC = () => {
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
+          timeZone: 'UTC',
         });
       },
     },

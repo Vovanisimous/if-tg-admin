@@ -4,4 +4,5 @@ export interface Visitor {
   name: string | null;
   creation_date: string;
   last_visit_date: string;
+  real_name: string | null;
 }
