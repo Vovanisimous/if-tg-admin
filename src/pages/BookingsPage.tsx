@@ -19,6 +19,8 @@ const BookingsPage: React.FC = () => {
     let query = supabase
       .from('bookings')
       .select('*, visitors:userid (username, real_name)', { count: 'exact' });
+    // Сортируем по id в порядке убывания, чтобы новые записи были первыми
+    query = query.order('id', { ascending: false });
     // Pagination
     query = query.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
     const { data, error, count } = await query;
@@ -76,7 +78,6 @@ const BookingsPage: React.FC = () => {
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
-          timeZone: 'UTC',
         });
       },
     },
@@ -126,7 +127,7 @@ const BookingsPage: React.FC = () => {
           paginationModel={{ page, pageSize: PAGE_SIZE }}
           onPaginationModelChange={(model) => setPage(model.page)}
           pagination
-          paginationMode="client"
+          paginationMode="server"
           loading={loading}
           slots={{ toolbar: GridToolbar }}
           filterMode="client"

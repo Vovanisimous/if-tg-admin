@@ -16,6 +16,8 @@ const VisitorsPage: React.FC = () => {
   const fetchVisitors = async (page: number, filters: any) => {
     setLoading(true);
     let query = supabase.from('visitors').select('*', { count: 'exact' });
+    // Сортируем по дате создания, чтобы новые посетители были первыми
+    query = query.order('creation_date', { ascending: false });
     // Pagination
     query = query.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
     const { data, error, count } = await query;
@@ -70,7 +72,6 @@ const VisitorsPage: React.FC = () => {
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
-          timeZone: 'UTC',
         });
       },
     },
@@ -88,7 +89,6 @@ const VisitorsPage: React.FC = () => {
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
-          timeZone: 'UTC',
         });
       },
     },
@@ -107,7 +107,7 @@ const VisitorsPage: React.FC = () => {
           paginationModel={{ page, pageSize: PAGE_SIZE }}
           onPaginationModelChange={(model) => setPage(model.page)}
           pagination
-          paginationMode="client"
+          paginationMode="server"
           loading={loading}
           slots={{ toolbar: GridToolbar }}
           filterMode="client"
