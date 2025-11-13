@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar, GridRowModel } from '@mui/x-data-grid';
 import { supabase } from '../supabaseClient';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Alert, Snackbar } from '@mui/material';
 import { Booking } from '../models/booking';
 
 const PAGE_SIZE = 10;
@@ -12,6 +12,15 @@ const BookingsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [filters, setFilters] = useState<any>({});
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
 
   const fetchBookings = async (page: number, filters: any) => {
     setLoading(true);
@@ -58,6 +67,29 @@ const BookingsPage: React.FC = () => {
     };
     // eslint-disable-next-line
   }, [page, filters]);
+
+  const handleProcessRowUpdate = async (newRow: GridRowModel, oldRow: GridRowModel) => {
+    try {
+      // Обновляем только поле comment
+      const { error } = await supabase
+        .from('bookings')
+        .update({ comment: newRow.comment || null })
+        .eq('id', newRow.id);
+
+      if (error) throw error;
+
+      setSnackbar({ open: true, message: 'Комментарий обновлен', severity: 'success' });
+      return newRow;
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      setSnackbar({ open: true, message: 'Ошибка при обновлении комментария', severity: 'error' });
+      return oldRow;
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90, filterable: true },
@@ -113,6 +145,17 @@ const BookingsPage: React.FC = () => {
                 : 'В ожидании';
       },
     },
+    {
+      field: 'comment',
+      headerName: 'Комментарий',
+      width: 250,
+      editable: true,
+      filterable: true,
+      renderCell: (params) => {
+        const value = params.value as string | null;
+        return value ? value : '';
+      },
+    },
   ];
 
   return (
@@ -141,8 +184,23 @@ const BookingsPage: React.FC = () => {
             setFilters(model);
             setPage(0);
           }}
+          processRowUpdate={handleProcessRowUpdate}
+          onProcessRowUpdateError={(error) => {
+            console.error('Error processing row update:', error);
+            setSnackbar({ open: true, message: 'Ошибка при обновлении', severity: 'error' });
+          }}
         />
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -4,4 +4,5 @@ export interface Booking {
   date: string;
   visitors_count: number;
   phone: string | null;
+  comment: string | null;
 }
